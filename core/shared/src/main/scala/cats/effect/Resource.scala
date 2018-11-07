@@ -137,6 +137,13 @@ sealed abstract class Resource[F[_], A] {
    */
   def flatMap[B](f: A => Resource[F, B]): Resource[F, B] =
     Bind(this, f)
+
+  /**
+    * Implementation for the `map` operation, as described via the
+    * `cats.Functor` type class
+    */
+  def map[B](f: A => B)(implicit F: Applicative[F]): Resource[F, B] =
+    flatMap(a => Resource.pure(f(a)))
 }
 
 object Resource extends ResourceInstances {
